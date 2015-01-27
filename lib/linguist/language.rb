@@ -1,9 +1,9 @@
-require 'escape_utils'
 require 'yaml'
 begin
   require 'yajl'
 rescue LoadError
 end
+require 'addressable/uri'
 
 require 'linguist/classifier'
 require 'linguist/heuristics'
@@ -449,7 +449,7 @@ module Linguist
     #
     # Returns the escaped String.
     def escaped_name
-      EscapeUtils.escape_url(name).gsub('+', '%20')
+      Addressable::URI.encode(name).to_s
     end
 
     # Internal: Get default alias name

@@ -1,8 +1,8 @@
 require 'linguist/generated'
 require 'charlock_holmes'
-require 'escape_utils'
 require 'mime/types'
 require 'yaml'
+require 'addressable/uri'
 
 module Linguist
   # DEPRECATED Avoid mixing into Blob classes. Prefer functional interfaces
@@ -99,7 +99,7 @@ module Linguist
       elsif name.nil?
         "attachment"
       else
-        "attachment; filename=#{EscapeUtils.escape_url(File.basename(name))}"
+        "attachment; filename=#{Addressable::URI.encode(File.basename(name)).to_s}"
       end
     end
 
