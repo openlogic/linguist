@@ -6,7 +6,8 @@
 require 'linguist/file_blob'
 require 'linguist/language'
 require 'linguist/repository'
-require 'rugged'
+
+require 'find'
 
 path = ARGV[0] || Dir.pwd
 
@@ -20,19 +21,33 @@ ARGV.shift
 breakdown = true if ARGV[0] == "--breakdown"
 
 if File.directory?(path)
-  rugged = Rugged::Repository.new(path)
-  repo = Linguist::Repository.new(rugged, rugged.head.target_id)
-  repo.languages.sort_by { |_, size| size }.reverse.each do |language, size|
-    percentage = ((size / repo.size.to_f) * 100)
+  files = Find.find(path).select do |file|
+    File.file?(file)
+  end
+
+  languages = files.reduce({}) do |memo, file|
+    if File.file?(file)
+      language = Linguist::FileBlob.new(file).language
+      if language
+        memo[language] = [] unless memo.has_key?(language)
+        memo[language] << file
+      end
+    end
+    memo
+  end.to_a.sort_by do |language, list|
+    [- list.length, language.to_s.downcase]
+  end
+
+  languages.each do |language, list|
+    percentage = ((list.length.to_f / files.length) * 100)
     percentage = sprintf '%.2f' % percentage
     puts "%-7s %s" % ["#{percentage}%", language]
   end
   if breakdown
     puts
-    file_breakdown = repo.breakdown_by_file
-    file_breakdown.each do |lang, files|
-      puts "#{lang}:"
-      files.each do |file|
+    languages.each do |language, list|
+      puts "#{language}:"
+      list.each do |file|
         puts file
       end
       puts

@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   s.executables << 'linguist'
 
   s.add_dependency 'mime-types',      '>= 1.19'
-  s.add_dependency 'rugged',          '~> 0.22.0b4'
   s.add_dependency 'rchardet',          '~> 1.6'
   s.add_dependency 'ptools',          '~> 1.3'
 

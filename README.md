@@ -36,21 +36,6 @@ The Language stats bar that you see on every repository is built by aggregating 
 
 The repository stats API, accessed through `#languages`, can be used on a directory:
 
-***API UPDATE***
-
-Since [Version 3.0.0](https://github.com/github/linguist/releases/tag/v3.0.0) Linguist expects a git repository (in the form of a [Rugged::Repository](https://github.com/libgit2/rugged#repositories)) to be passed when initializing `Linguist::Repository`.
-
-
-```ruby
-require 'rugged'
-require 'linguist'
-
-repo = Rugged::Repository.new('.')
-project = Linguist::Repository.new(repo, repo.head.target_id)
-project.language       #=> "Ruby"
-project.languages      #=> { "Ruby" => 119387 }
-```
-
 These stats are also printed out by the `linguist` binary. You can use the
 `--breakdown` flag, and the binary will also output the breakdown of files by language.
 
