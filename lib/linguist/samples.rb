@@ -1,5 +1,5 @@
 begin
-  require 'yajl'
+  require 'json/pure'
 rescue LoadError
   require 'yaml'
 end
@@ -20,8 +20,7 @@ module Linguist
     # Hash of serialized samples object
     def self.cache
       @cache ||= begin
-        serializer = defined?(Yajl) ? Yajl : YAML
-        serializer.load(File.read(PATH))
+        defined?(JSON) ? JSON.parse(File.read(PATH)) : YAML.load(File.read(PATH))
       end
     end
 

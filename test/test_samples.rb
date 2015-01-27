@@ -13,11 +13,11 @@ class TestSamples < Minitest::Test
       warn "Samples database is out of date. Run `bundle exec rake samples`."
 
       expected = Tempfile.new('expected.json')
-      expected.write Yajl.dump(serialized, :pretty => true)
+      expected.write JSON.pretty_generate(serialized)
       expected.close
 
       actual = Tempfile.new('actual.json')
-      actual.write Yajl.dump(latest, :pretty => true)
+      actual.write JSON.pretty_generate(latest)
       actual.close
 
       expected.unlink
