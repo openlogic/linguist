@@ -1,8 +1,9 @@
 require 'linguist/generated'
-require 'charlock_holmes'
 require 'mime/types'
 require 'yaml'
 require 'addressable/uri'
+require 'rchardet'
+require 'ptools'
 
 module Linguist
   # DEPRECATED Avoid mixing into Blob classes. Prefer functional interfaces
@@ -105,13 +106,13 @@ module Linguist
 
     def encoding
       if hash = detect_encoding
-        hash[:encoding]
+        hash['encoding']
       end
     end
 
     def ruby_encoding
       if hash = detect_encoding
-        hash[:ruby_encoding]
+        hash['encoding']
       end
     end
 
@@ -121,7 +122,7 @@ module Linguist
     #          this will return nil if an error occurred during detection or
     #          no valid encoding could be found
     def detect_encoding
-      @detect_encoding ||= CharlockHolmes::EncodingDetector.new.detect(data) if data
+      @detect_encoding ||= CharDet.detect(data) if data
     end
 
     # Public: Is the blob binary?
@@ -136,13 +137,9 @@ module Linguist
       elsif data == ""
         false
 
-      # Charlock doesn't know what to think
-      elsif encoding.nil?
-        true
-
-      # If Charlock says its binary
+      # If PTools says its binary
       else
-        detect_encoding[:type] == :binary
+        File.binary?(name)
       end
     end
 
