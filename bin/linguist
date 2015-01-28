@@ -5,7 +5,6 @@
 
 require 'linguist/file_blob'
 require 'linguist/language'
-require 'linguist/repository'
 
 require 'find'
 
